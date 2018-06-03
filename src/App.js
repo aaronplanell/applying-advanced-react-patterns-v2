@@ -14,7 +14,9 @@ class App extends Component {
           <Toggle onToggle={() => console.log('onToggle')}>
             <Toggle.On>The toggle is On</Toggle.On>
             <Toggle.Off>The toggle is Off</Toggle.Off>
-            <Toggle.Button />
+            <div style={{ marginTop: '15px' }}>
+              <Toggle.Button />
+            </div>
           </Toggle>
         </p>
       </div>

@@ -1,12 +1,33 @@
 import React from 'react';
 import { Switch } from './Switch';
 
+const ToggleContext = React.createContext({
+  on: false,
+  toggle: () => {},
+});
+
 class Toggle extends React.Component {
   state = { on: false };
 
-  static On = props => (props.on ? props.children : null);
-  static Off = props => (props.on ? null : props.children);
-  static Button = props => <Switch on={props.on} onClick={props.toggle} />;
+  static On = props => (
+    <ToggleContext.Consumer>
+      {contextValue => (contextValue.on ? props.children : null)}
+    </ToggleContext.Consumer>
+  );
+
+  static Off = props => (
+    <ToggleContext.Consumer>
+      {contextValue => (contextValue.on ? null : props.children)}
+    </ToggleContext.Consumer>
+  );
+
+  static Button = props => (
+    <ToggleContext.Consumer>
+      {contextValue => (
+        <Switch on={contextValue.on} onClick={contextValue.toggle} />
+      )}
+    </ToggleContext.Consumer>
+  );
 
   toggle = () =>
     this.setState(
@@ -17,12 +38,16 @@ class Toggle extends React.Component {
     );
 
   render() {
-    return React.Children.map(this.props.children, child => {
-      return React.cloneElement(child, {
-        on: this.state.on,
-        toggle: this.toggle,
-      });
-    });
+    return (
+      <ToggleContext.Provider
+        value={{
+          on: this.state.on,
+          toggle: this.toggle,
+        }}
+      >
+        {this.props.children}
+      </ToggleContext.Provider>
+    );
   }
 }
 
