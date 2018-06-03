@@ -11,7 +11,11 @@ class App extends Component {
           <h1 className="App-title">Applying Advanced React Patters v2</h1>
         </header>
         <p className="App-intro">
-          <Toggle onToggle={() => console.log('onToggle')} />
+          <Toggle onToggle={() => console.log('onToggle')}>
+            <Toggle.On>The toggle is On</Toggle.On>
+            <Toggle.Off>The toggle is Off</Toggle.Off>
+            <Toggle.Button />
+          </Toggle>
         </p>
       </div>
     );
