@@ -1,8 +1,8 @@
 import React from 'react';
-import { Switch } from './Switch';
 
 class Toggle extends React.Component {
   state = { on: false };
+
   toggle = () =>
     this.setState(
       ({ on }) => ({ on: !on }),
@@ -10,9 +10,16 @@ class Toggle extends React.Component {
         this.props.onToggle(this.state.on);
       }
     );
+
+  getStateAndHelpers = () => {
+    return {
+      on: this.state.on,
+      toggle: this.toggle,
+    };
+  };
+
   render() {
-    const { on } = this.state;
-    return <Switch on={on} onClick={this.toggle} />;
+    return this.props.children(this.getStateAndHelpers());
   }
 }
 
