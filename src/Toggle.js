@@ -1,5 +1,4 @@
 import React from 'react';
-import { Switch } from './Switch';
 
 class Toggle extends React.Component {
   static defaultProps = {
@@ -8,45 +7,53 @@ class Toggle extends React.Component {
   };
   initialState = { on: this.props.initialOn };
   state = this.initialState;
+  static stateChangeTypes = {
+    toggle: 'TOGGLE',
+    reset: 'RESET',
+    force: 'FORCED',
+  };
 
   internalSetState(changes, callback) {
     this.setState(currentState => {
       // As setState, internalSetState can reveive a function or a state as a first argument
       const changesObject =
         typeof changes === 'function' ? changes(currentState) : changes;
-      const reducerObject =
+      const { type, ...remainingChanges } =
         this.props.stateReducer(currentState, changesObject) || {};
-      // Only returns reducerObject if has changes to avoid an unecessary renders
-      return Object.keys(reducerObject).length > 0 ? reducerObject : null;
+      // Only returns reducerObject if has changes to avoid an unnecessary renders
+      return Object.keys(remainingChanges).length > 0 ? remainingChanges : null;
     }, callback);
   }
 
-  toggle = () =>
+  toggle = ({ type = Toggle.stateChangeTypes.toggle } = {}) =>
     this.internalSetState(
-      ({ on }) => ({ on: !on }),
+      ({ on }) => ({ type, on: !on }),
       () => {
         this.props.onToggle(this.state.on);
       }
     );
 
-  reset = () => {
+  reset = ({ type = Toggle.stateChangeTypes.toggle } = {}) => {
     this.internalSetState(
-      () => this.initialState,
+      () => {
+        return { type, ...this.initialState };
+      },
       () => {
         this.props.onReset(this.state.on);
       }
     );
   };
 
+  getStateAndHelpers = () => {
+    return {
+      on: this.state.on,
+      toggle: this.toggle,
+      reset: this.reset,
+    };
+  };
+
   render() {
-    const { on } = this.state;
-    return (
-      <div>
-        <Switch on={on} onClick={this.toggle} />
-        <br />
-        <button onClick={this.reset}>Reset</button>
-      </div>
-    );
+    return this.props.children(this.getStateAndHelpers());
   }
 }
 

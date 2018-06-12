@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Toggle from './Toggle';
+import { Switch } from './Switch';
+
+const MAX_TIMES_CLICKED = 4;
 
 class App extends Component {
   initialState = { timesClicked: 0 };
@@ -20,10 +23,19 @@ class App extends Component {
   };
 
   stateReducer = (state, changes) => {
-    if (this.state.timesClicked >= 4) {
+    if (changes.type === 'FORCED') {
+      return changes;
+    }
+    if (this.state.timesClicked >= MAX_TIMES_CLICKED) {
       return { ...changes, on: false };
     }
     return changes;
+  };
+
+  renderForceToggleButton = toggle => {
+    return this.state.timesClicked >= MAX_TIMES_CLICKED ? (
+      <button onClick={() => toggle({ type: 'FORCED' })}>Force Toggle</button>
+    ) : null;
   };
 
   render() {
@@ -37,7 +49,19 @@ class App extends Component {
             onToggle={this.handleToggle}
             onReset={this.handleReset}
             stateReducer={this.stateReducer}
-          />
+          >
+            {({ on, toggle, reset }) => {
+              return (
+                <div>
+                  <Switch on={on} onClick={toggle} />
+                  <br />
+                  <button onClick={reset}>Reset</button>
+                  <br />
+                  {this.renderForceToggleButton(toggle)}
+                </div>
+              );
+            }}
+          </Toggle>
         </div>
       </div>
     );
