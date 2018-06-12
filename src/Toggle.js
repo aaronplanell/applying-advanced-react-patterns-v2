@@ -11,12 +11,21 @@ class Toggle extends React.Component {
       }
     );
 
+  getTogglerProps = ({ onClick, ...props }) => {
+    return {
+      onClick: () => {
+        if (onClick) onClick();
+        this.toggle();
+      },
+      ...props,
+    };
+  };
+
   getStateAndHelpers = () => {
     return {
       on: this.state.on,
-      togglerProps: {
-        onClick: this.toggle,
-      },
+      toggle: this.toggle,
+      getTogglerProps: this.getTogglerProps,
     };
   };
 
