@@ -11,7 +11,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Applying Advanced React Patters v2</h1>
         </header>
-        <p className="App-intro">
+        <div className="App-intro">
           <Toggle onToggle={() => console.log('onToggle')}>
             {props => {
               const { on, toggle } = props;
@@ -27,7 +27,7 @@ class App extends Component {
               );
             }}
           </Toggle>
-        </p>
+        </div>
       </div>
     );
   }
