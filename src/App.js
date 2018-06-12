@@ -14,14 +14,14 @@ class App extends Component {
         <div className="App-intro">
           <Toggle onToggle={() => console.log('onToggle')}>
             {props => {
-              const { on, toggle } = props;
+              const { on, togglerProps } = props;
               const status = on ? 'On' : 'Off';
               return (
                 <div>
                   <p>The status is {status}</p>
-                  <Switch on={on} onClick={toggle} />
+                  <Switch on={on} {...togglerProps} />
                   <div style={{ marginTop: '15px' }}>
-                    <button onClick={toggle}>{status}</button>
+                    <button {...togglerProps}>{status}</button>
                   </div>
                 </div>
               );
