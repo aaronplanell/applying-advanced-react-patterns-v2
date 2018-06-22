@@ -3,6 +3,15 @@ import './App.css';
 
 import Toggle from './Toggle';
 import { Switch } from './Switch';
+import { withToggle } from './HOCs';
+
+const SwitchWithToggle = withToggle(({ toggle: { on, toggle } }) => (
+  <Switch on={on} onClick={toggle} />
+));
+
+const TextWithToggle = withToggle(
+  ({ toggle: { on } }) => `The status is ${on}`
+);
 
 class App extends Component {
   render() {
@@ -13,14 +22,10 @@ class App extends Component {
         </header>
         <p className="App-intro">
           <Toggle onToggle={() => console.log('onToggle')}>
-            <Toggle.Consumer>
-              {({ on, toggle }) => <Switch on={on} onClick={toggle} />}
-            </Toggle.Consumer>
+            <SwitchWithToggle />
             <br />
             <br />
-            <Toggle.Consumer>
-              {({ on }) => `The status is ${on}`}
-            </Toggle.Consumer>
+            <TextWithToggle />
           </Toggle>
         </p>
       </div>
