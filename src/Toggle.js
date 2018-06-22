@@ -1,7 +1,12 @@
 import React from 'react';
-import { Switch } from './Switch';
+
+const ToggleContext = React.createContext({
+  on: false,
+  toggle: () => {},
+});
 
 class Toggle extends React.Component {
+  static Consumer = ToggleContext.Consumer;
   state = { on: false };
   toggle = () =>
     this.setState(
@@ -11,8 +16,15 @@ class Toggle extends React.Component {
       }
     );
   render() {
-    const { on } = this.state;
-    return <Switch on={on} onClick={this.toggle} />;
+    return (
+      <ToggleContext.Provider
+        value={{
+          on: this.state.on,
+          toggle: this.toggle,
+        }}
+        {...this.props}
+      />
+    );
   }
 }
 
